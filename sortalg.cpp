@@ -5,6 +5,9 @@
 using namespace std;
 using namespace std::chrono;
 
+int porownania = 0;
+int zamiany = 0;
+
 void print(vector<int>& T)
 {
     for(int i=0; i<T.size(); i++)
@@ -20,41 +23,49 @@ void bubblesort(vector<int>& T)
     {
         for(int j=0; j<T.size()-i-1; j++)
         {
+            porownania++;
             if(T[j]<T[j+1])
             {
+                zamiany++;
                 swap(T[j], T[j+1]);
+    
             }
         }
     }
 }
 
 void insertionsort(vector<int>& T)
-{
+{   
     for(int j=1; j<T.size(); j++)
     {
         int key = T[j];
         int i = j-1;
+        porownania++;
         while(i>=0 && T[i]<key)
         {
+            porownania++;
             T[i+1] = T[i];
             i--;
         }
+        zamiany++;
         T[i+1] = key;
     }
 }
 
 void selectionsort(vector<int>& T)
-{
+{   
     for(int i=0; i<T.size()-1; i++)
     {
         int max = i;
         for(int j=i+1; j<T.size(); j++)
         {
+            porownania++;
             if(T[j]>T[max])
             {
                 max = j;
             }
         }
+        zamiany++;
         swap(T[i], T[max]);
     }
 }
@@ -64,6 +75,7 @@ void merge(vector<int>& T, vector<int>& L, vector<int>& R)
     int i=0, j=0, k=0;
     while(i<L.size() && j<R.size())
     {
+        porownania++;
         if(L[i]>R[j])
         {
             T[k] = L[i];
@@ -117,16 +129,20 @@ void heapify(vector<int>& T, int n, int i)
     int smallest = i;
     int l = 2*i+1;
     int r = 2*i+2;
+    porownania++;
     if(l<n && T[l]<T[smallest])
     {
         smallest = l;
     }
+    porownania++;
     if(r<n && T[r]<T[smallest])
     {
         smallest = r;
     }
+    porownania++;
     if(smallest!=i)
     {
+        zamiany++;
         swap(T[i], T[smallest]);
         heapify(T, n, smallest);
     }
@@ -139,6 +155,7 @@ void heapsort(vector<int>& T)
     }
     for(int i=T.size()-1; i>0; i--)
     {
+        zamiany++;
         swap(T[0], T[i]);
         heapify(T, i, 0);
     }
@@ -150,16 +167,22 @@ int partition(vector<int>& T, int p, int r)
     int i = p, j=r;
     while (true)
     {
+        porownania++;
         while (T[i]>pivot)
         {
+            porownania++;
             i++;
         }
+        porownania++;
         while (T[j]<pivot)
         {
+            porownania++;
             j--;
         }
+        porownania++;
         if(i<=j)
         {
+            zamiany++;
             swap(T[i], T[j]);
             i++;
             j--;
@@ -174,6 +197,7 @@ int partition(vector<int>& T, int p, int r)
 
 void quicksort(vector<int>& T, int p, int r)
 {
+    porownania++;
     if(p<r)
     {
         int q = partition(T, p, r);
@@ -243,7 +267,9 @@ int main()
     }
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
-    print(T);
-    cout<<"Time taken: "<<duration.count()<<" microseconds"<<endl;
+    //print(T);
+    cout<<"Czas: "<<duration.count()<<" microseconds"<<endl;
+    cout<<"Porownania: "<<porownania<<endl;
+    cout<<"Zamiany: "<<zamiany<<endl;
     return 0;
 }
