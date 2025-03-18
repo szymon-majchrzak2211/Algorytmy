@@ -150,11 +150,11 @@ int partition(vector<int>& T, int p, int r)
     int i = p, j=r;
     while (true)
     {
-        while (T[i]<pivot)
+        while (T[i]>pivot)
         {
             i++;
         }
-        while (T[j]>pivot)
+        while (T[j]<pivot)
         {
             j--;
         }
@@ -189,24 +189,61 @@ void quicksort(vector<int>& T, int p, int r)
 
 int main()
 {
-    int n=10;
+    cout << "1 - losowe liczby, 2 - własne liczby, 3 - tablica" << endl;
+    int wybor;
+    cin >> wybor;
+    cout << "Podaj ilość liczb do posortowania" << endl;
+    int n;
+    cin >> n;
+    cout << "1 - bubblesort, 2 - insertionsort, 3 - selectionsort, 4 - mergesort, 5 - heapsort, 6 - quicksort, 7 - shellsort" << endl;
+    int sortwybor;
+    cin >> sortwybor;
     vector<int> T(n);
-    for (int i=0; i<n; i++)
+    if (wybor == 1)
     {
-      T[i] = rand()%1000;
+        for (int i=0; i<n; i++)
+        {
+      T[i] = rand()%(10*n);
+        }
     }
-    print(T);
+    else if (wybor == 2)
+    {
+        cout<<"Podaj liczby do posortowania"<<endl;
+        for (int i=0; i<n; i++)
+        {
+            cin >> T[i];
+        }
+    }
+    else if (wybor == 3)
+    {
+        T={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    }
     auto start = high_resolution_clock::now();
-    //bubblesort(T);
-    insertionsort(T);
-    //selectionsort(T);
-    //mergesort(T);
-    //heapsort(T);
-    //quicksort(T, 0, T.size()-1);
-    //shellsort(T);
+    switch(sortwybor)
+    {
+        case 1:
+            bubblesort(T);
+            break;
+        case 2:
+            insertionsort(T);
+            break;
+        case 3:
+            selectionsort(T);
+            
+            break;
+        case 4:
+            mergesort(T);
+            break;
+        case 5:
+            heapsort(T);
+            break;
+        case 6:
+            quicksort(T, 0, T.size()-1);
+            break;
+    }
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
-    //print(T);
+    print(T);
     cout<<"Time taken: "<<duration.count()<<" microseconds"<<endl;
     return 0;
 }
