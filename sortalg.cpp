@@ -7,6 +7,7 @@ using namespace std::chrono;
 
 int porownania = 0;
 int zamiany = 0;
+int scalania = 0;
 
 void print(vector<int>& T)
 {
@@ -72,6 +73,7 @@ void selectionsort(vector<int>& T)
 
 void merge(vector<int>& T, vector<int>& L, vector<int>& R)
 {
+    scalania++;
     int i=0, j=0, k=0;
     while(i<L.size() && j<R.size())
     {
@@ -164,6 +166,7 @@ void heapsort(vector<int>& T)
 int partition(vector<int>& T, int p, int r)
 {
     int pivot = T[r];
+    cout<<"pivot: "<<pivot<<endl;
     int i = p, j=r;
     while (true)
     {
@@ -206,10 +209,35 @@ void quicksort(vector<int>& T, int p, int r)
     }
 }
 
-/*void shellsort(vector<int>& T)
+void shellsort(vector<int>& T)
 {
+    int n = T.size();
+    int gap = 1; 
+    while (gap < n) 
+    {
+        gap = gap * 3 + 1;
+    }
+    while (gap > 0) 
+    {
+        for (int i = gap; i < n; i++) 
+        {
+            int temp = T[i];
+            int j = i;
+            porownania++;
+            while (j >= gap && T[j - gap] < temp) 
+            {
+                porownania++;
+                T[j] = T[j - gap];
+                j -= gap;
+            }
+            zamiany++;
+            T[j] = temp;
+        }
+        gap = (gap - 1) / 3;
+    }
+
 }
-*/
+
 
 int main()
 {
@@ -264,12 +292,19 @@ int main()
         case 6:
             quicksort(T, 0, T.size()-1);
             break;
+        case 7:
+            shellsort(T);
+            break;
     }
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
-    //print(T);
+    print(T);
     cout<<"Czas: "<<duration.count()<<" microseconds"<<endl;
     cout<<"Porownania: "<<porownania<<endl;
     cout<<"Zamiany: "<<zamiany<<endl;
+    if (sortwybor == 4)
+    {
+        cout<<"Scalania: "<<scalania<<endl;
+    }
     return 0;
 }
