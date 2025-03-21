@@ -8,6 +8,7 @@ using namespace std::chrono;
 int porownania = 0;
 int zamiany = 0;
 int scalania = 0;
+vector<int> P;
 
 void print(vector<int>& T)
 {
@@ -166,7 +167,7 @@ void heapsort(vector<int>& T)
 int partition(vector<int>& T, int p, int r)
 {
     int pivot = T[r];
-    cout<<"pivot: "<<pivot<<endl;
+    P.push_back(pivot);
     int i = p, j=r;
     while (true)
     {
@@ -204,7 +205,7 @@ void quicksort(vector<int>& T, int p, int r)
     if(p<r)
     {
         int q = partition(T, p, r);
-        quicksort(T, p, q-1);
+        quicksort(T, p, q);
         quicksort(T, q+1, r);
     }
 }
@@ -241,7 +242,7 @@ void shellsort(vector<int>& T)
 
 int main()
 {
-    cout << "1 - losowe liczby, 2 - własne liczby, 3 - tablica" << endl;
+   /* cout << "1 - losowe liczby, 2 - własne liczby, 3 - tablica" << endl;
     int wybor;
     cin >> wybor;
     cout << "Podaj ilość liczb do posortowania" << endl;
@@ -269,8 +270,18 @@ int main()
     else if (wybor == 3)
     {
         T={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    }
+    }*/
+    vector<int> T(10);
+    cout << "1 - bubblesort, 2 - insertionsort, 3 - selectionsort, 4 - mergesort, 5 - heapsort, 6 - quicksort, 7 - shellsort" << endl;
+    for(int i=1; i<8;i++)
+    {
+    porownania = 0;
+    zamiany = 0;
+    T={4,1,8,9,6,6,5,6,4,7};
+    cout<<i<<endl;
+    print(T);
     auto start = high_resolution_clock::now();
+    int sortwybor=i;
     switch(sortwybor)
     {
         case 1:
@@ -280,8 +291,7 @@ int main()
             insertionsort(T);
             break;
         case 3:
-            selectionsort(T);
-            
+            selectionsort(T); 
             break;
         case 4:
             mergesort(T);
@@ -305,6 +315,13 @@ int main()
     if (sortwybor == 4)
     {
         cout<<"Scalania: "<<scalania<<endl;
+    }
+    if(sortwybor == 6)
+    {
+        cout<<"Pivot: ";
+        print(P);
+    }
+    cout<<endl;
     }
     return 0;
 }
