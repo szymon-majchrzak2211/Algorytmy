@@ -2,6 +2,8 @@
 #include <chrono>
 #include <vector>
 #include <cmath>
+#include <algorithm>
+#include <cstdlib>
 using namespace std;
 using namespace std::chrono;
 
@@ -18,6 +20,42 @@ void print(vector<int>& T)
     }
     cout<<endl;
 }
+
+vector<int> generateRandomSequence(int n) {
+    vector<int> seq(n);
+    for (int &num : seq) {
+        num = rand() % (10*n);
+    }
+    return seq;
+}
+
+vector<int> generateIncreasingSequence(int n) {
+    vector<int> seq = generateRandomSequence(n);
+    sort(seq.begin(), seq.end());
+    return seq;
+}
+
+vector<int> generateDecreasingSequence(int n) {
+    vector<int> seq = generateIncreasingSequence(n);
+    reverse(seq.begin(), seq.end());
+    return seq;
+}
+
+vector<int> generateAShapeSequence(int n) {
+    vector<int> firstHalf = generateIncreasingSequence(n / 2);
+    vector<int> secondHalf = generateDecreasingSequence(n - n / 2);
+    firstHalf.insert(firstHalf.end(), secondHalf.begin(), secondHalf.end());
+    return firstHalf;
+}
+
+vector<int> generateVShapeSequence(int n) {
+    vector<int> firstHalf = generateDecreasingSequence(n / 2);
+    vector<int> secondHalf = generateIncreasingSequence(n - n / 2);
+    firstHalf.insert(firstHalf.end(), secondHalf.begin(), secondHalf.end());
+    return firstHalf;
+}
+
+//Algorytmy sortujące
 
 void bubblesort(vector<int>& T)
 {
@@ -242,42 +280,19 @@ void shellsort(vector<int>& T)
 
 int main()
 {
-   /* cout << "1 - losowe liczby, 2 - własne liczby, 3 - tablica" << endl;
-    int wybor;
-    cin >> wybor;
-    cout << "Podaj ilość liczb do posortowania" << endl;
-    int n;
-    cin >> n;
-    cout << "1 - bubblesort, 2 - insertionsort, 3 - selectionsort, 4 - mergesort, 5 - heapsort, 6 - quicksort, 7 - shellsort" << endl;
-    int sortwybor;
-    cin >> sortwybor;
+    int n=10;
     vector<int> T(n);
-    if (wybor == 1)
-    {
-        for (int i=0; i<n; i++)
-        {
-      T[i] = rand()%(10*n);
-        }
-    }
-    else if (wybor == 2)
-    {
-        cout<<"Podaj liczby do posortowania"<<endl;
-        for (int i=0; i<n; i++)
-        {
-            cin >> T[i];
-        }
-    }
-    else if (wybor == 3)
-    {
-        T={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    }*/
-    vector<int> T(10);
+    vector<int> T1 = generateRandomSequence(n);
+    vector<int> T2 = generateIncreasingSequence(n);
+    vector<int> T3 = generateDecreasingSequence(n);
+    vector<int> T4 = generateAShapeSequence(n);
+    vector<int> T5 = generateVShapeSequence(n);
     cout << "1 - bubblesort, 2 - insertionsort, 3 - selectionsort, 4 - mergesort, 5 - heapsort, 6 - quicksort, 7 - shellsort" << endl;
     for(int i=1; i<8;i++)
     {
     porownania = 0;
     zamiany = 0;
-    T={4,1,8,9,6,6,5,6,4,7};
+    T=T5;
     cout<<i<<endl;
     print(T);
     auto start = high_resolution_clock::now();
