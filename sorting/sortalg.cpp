@@ -4,11 +4,14 @@
 #include <cmath>
 #include <algorithm>
 #include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <fstream>
 using namespace std;
 using namespace std::chrono;
 
-int porownania = 0;
-int zamiany = 0;
+long long porownania = 0;
+long long zamiany = 0;
 int scalania = 0;
 vector<int> P;
 
@@ -280,63 +283,113 @@ void shellsort(vector<int>& T)
 
 int main()
 {
-    int n=10;
-    vector<int> T(n);
-    vector<int> T1 = generateRandomSequence(n);
-    vector<int> T2 = generateIncreasingSequence(n);
-    vector<int> T3 = generateDecreasingSequence(n);
-    vector<int> T4 = generateAShapeSequence(n);
-    vector<int> T5 = generateVShapeSequence(n);
+    srand(time(0));
+    ofstream fout("results.csv");
+    int N[]={1000, 10000, 25000, 50000, 75000, 100000, 125000, 150000, 175000, 200000, 2000000 };
+    vector<int> T,T0, T1, T2, T3, T4, T5, T6, T7, T8, T9;
     cout << "1 - bubblesort, 2 - insertionsort, 3 - selectionsort, 4 - mergesort, 5 - heapsort, 6 - quicksort, 7 - shellsort" << endl;
-    for(int i=1; i<8;i++)
+    for(int j=0; j<11; j++)
     {
-    porownania = 0;
-    zamiany = 0;
-    T=T5;
-    cout<<i<<endl;
-    print(T);
-    auto start = high_resolution_clock::now();
-    int sortwybor=i;
-    switch(sortwybor)
-    {
-        case 1:
-            bubblesort(T);
+        cout<<j<<endl;
+        fout<<N[j]<<endl;
+        T0=generateVShapeSequence(N[j]);
+        T1=generateVShapeSequence(N[j]);
+        T2=generateVShapeSequence(N[j]);
+        /*T3=generateRandomSequence(N[j]);
+        T4=generateRandomSequence(N[j]);
+        T5=generateRandomSequence(N[j]);
+        T6=generateRandomSequence(N[j]);
+        T7=generateRandomSequence(N[j]);
+        T8=generateRandomSequence(N[j]);
+        T9=generateRandomSequence(N[j]);*/
+        for(int i=5; i<6;i++)
+        {
+        fout<<i<<endl;
+        for(int k=0; k<3; k++)
+        {
+        porownania = 0;
+        zamiany = 0;
+        switch(k)
+        {
+            case 0:
+            T=T0;
             break;
-        case 2:
-            insertionsort(T);
+            case 1:
+            T=T1;
             break;
-        case 3:
-            selectionsort(T); 
+            case 2:
+            T=T2;
             break;
-        case 4:
-            mergesort(T);
+            case 3:
+            T=T3;
             break;
-        case 5:
-            heapsort(T);
+            case 4:
+            T=T4;
             break;
-        case 6:
-            quicksort(T, 0, T.size()-1);
+            case 5:
+            T=T5;
             break;
-        case 7:
-            shellsort(T);
+            case 6:
+            T=T6;
             break;
+            case 7:
+            T=T7;
+            break;
+            case 8:
+            T=T8;
+            break;
+            case 9:
+            T=T9;
+            break;
+        }
+        //print(T);
+        auto start = high_resolution_clock::now();
+        int sortwybor=i;
+        switch(sortwybor)
+        {
+            case 1:
+                bubblesort(T);
+                break;
+            case 2:
+                insertionsort(T);
+                break;
+            case 3:
+                selectionsort(T); 
+                break;
+            case 4:
+                mergesort(T);
+                break;
+            case 5:
+                heapsort(T);
+                break;
+            case 6:
+                quicksort(T, 0, T.size()-1);
+                break;
+            case 7:
+                shellsort(T);
+                break;
+        }
+        auto stop = high_resolution_clock::now();
+        auto duration = duration_cast<microseconds>(stop - start);
+        //print(T);
+        fout<<duration.count()<<";";
+        fout<<porownania<<";";
+        fout<<zamiany<<";";
+        /*if (sortwybor == 4)
+        {
+            fout<<scalania<<";";
+        }*/
+        /* if(sortwybor == 6)
+        {
+            cout<<"Pivot: ";
+            print(P);
+        }*/
+        fout<<endl;
+        }
     }
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
-    print(T);
-    cout<<"Czas: "<<duration.count()<<" microseconds"<<endl;
-    cout<<"Porownania: "<<porownania<<endl;
-    cout<<"Zamiany: "<<zamiany<<endl;
-    if (sortwybor == 4)
-    {
-        cout<<"Scalania: "<<scalania<<endl;
-    }
-    if(sortwybor == 6)
-    {
-        cout<<"Pivot: ";
-        print(P);
-    }
-    cout<<endl;
-    }
+}
+    cout<<"Koniec"<<endl;
+    fout.close();
     return 0;
+
 }
