@@ -90,8 +90,11 @@ void insertionsort(vector<int>& T)
             T[i+1] = T[i];
             i--;
         }
+        if(T[i+1] != key)
+        {
         zamiany++;
         T[i+1] = key;
+        }
     }
 }
 
@@ -108,8 +111,11 @@ void selectionsort(vector<int>& T)
                 max = j;
             }
         }
+        if(T[i]=T[max])
+        {
         zamiany++;
         swap(T[i], T[max]);
+        }
     }
 }
 
@@ -272,8 +278,11 @@ void shellsort(vector<int>& T)
                 T[j] = T[j - gap];
                 j -= gap;
             }
+            if(T[j]!=temp)
+            {
             zamiany++;
             T[j] = temp;
+            }
         }
         gap = (gap - 1) / 3;
     }
@@ -285,27 +294,27 @@ int main()
 {
     srand(time(0));
     ofstream fout("results.csv");
-    int N[]={1000, 10000, 25000, 50000, 75000, 100000, 125000, 150000, 175000, 200000, 2000000 };
+    int N[]={1000, 10000, 25000, 50000, 75000, 100000, 125000, 150000, 175000, 200000 };
     vector<int> T,T0, T1, T2, T3, T4, T5, T6, T7, T8, T9;
     cout << "1 - bubblesort, 2 - insertionsort, 3 - selectionsort, 4 - mergesort, 5 - heapsort, 6 - quicksort, 7 - shellsort" << endl;
-    for(int j=0; j<11; j++)
+    for(int j=0; j<10; j++)
     {
         cout<<j<<endl;
         fout<<N[j]<<endl;
         T0=generateVShapeSequence(N[j]);
         T1=generateVShapeSequence(N[j]);
         T2=generateVShapeSequence(N[j]);
-        /*T3=generateRandomSequence(N[j]);
+        T3=generateRandomSequence(N[j]);
         T4=generateRandomSequence(N[j]);
         T5=generateRandomSequence(N[j]);
         T6=generateRandomSequence(N[j]);
         T7=generateRandomSequence(N[j]);
         T8=generateRandomSequence(N[j]);
-        T9=generateRandomSequence(N[j]);*/
-        for(int i=5; i<6;i++)
+        T9=generateRandomSequence(N[j]);
+        for(int i=1; i<8;i++)
         {
         fout<<i<<endl;
-        for(int k=0; k<3; k++)
+        for(int k=0; k<10; k++)
         {
         porownania = 0;
         zamiany = 0;
