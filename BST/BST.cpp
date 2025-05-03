@@ -316,7 +316,7 @@ AVLNode *createAVLNode(int key)
     AVLNode* newNode = new AVLNode();
     newNode->key = key;
     newNode->left = newNode->right = nullptr;
-    newNode->height = 1; // New node is initially added at leaf
+    newNode->height = 1;
     return newNode;
 }
 
@@ -585,7 +585,7 @@ void testBST()
     ofstream foutM("testBSTM.csv");
     ofstream foutI("testBSTI.csv");
     ofstream foutR("testBSTR.csv");
-    vector<int> N={10,1000,10000,20000,50000};
+    vector<int> N={10,1000,5000,10000,15000,20000,25000,30000,35000,40000,45000};
     for(int i=0; i<N.size(); i++)
     {
         Node* root=nullptr;
@@ -596,17 +596,20 @@ void testBST()
         auto stop = high_resolution_clock::now();
         auto duration = duration_cast<microseconds>(stop - start);
         foutT <<N[i]<<";"<<duration.count()<<endl;
+
         auto start1 = high_resolution_clock::now();
         minValueNode(root);
         auto stop1 = high_resolution_clock::now();
         auto duration1 = duration_cast<microseconds>(stop1 - start1);
         foutM <<N[i]<<";"<<duration1.count()<<endl;
+
         auto start2 = high_resolution_clock::now();
         inorderTraversal(root);
         auto stop2 = high_resolution_clock::now();
         auto duration2 = duration_cast<microseconds>(stop2 - start2);
         foutI <<N[i]<<";"<<duration2.count()<<endl;
         inorderPath.clear();
+
         auto start3 = high_resolution_clock::now();
         root=balanceTree(root);
         auto stop3 = high_resolution_clock::now();
@@ -624,7 +627,7 @@ void testAVL()
     ofstream foutT("testAVLT.csv");
     ofstream foutM("testAVLM.csv");
     ofstream foutI("testAVLI.csv");
-    vector<int> N={10,1000,10000,20000,50000};
+    vector<int> N={10,1000,5000,10000,15000,20000,25000,30000,35000,40000,45000};
     for(int i=0; i<N.size(); i++)
     {
         AVLNode* root=nullptr;
@@ -656,11 +659,8 @@ int main()
     int o,d,k,r,t;
     //random sequence generation
     srand(time(0));
-    int n = 10;
-    vector<int> randomSequence = generateRandomSequence(n);
     vector<int> Sequence;
     Sequence = {9,10,3,5,4,6,7,2,1,8};
-    //Sequence=randomSequence;
     cout<< "1-AVL"<<endl<<"2-BST(losowe)"<<endl<<"3-TestBST"<<endl<<"4-TestAVL"<<endl;
     cin>>t;
     if(t==1)
