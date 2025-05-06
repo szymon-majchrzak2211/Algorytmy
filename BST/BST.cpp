@@ -627,7 +627,7 @@ void testAVL()
     ofstream foutT("testAVLT.csv");
     ofstream foutM("testAVLM.csv");
     ofstream foutI("testAVLI.csv");
-    vector<int> N={10,1000,5000,10000,15000,20000,25000,30000,35000,40000,45000};
+    vector<int> N={80000000};
     for(int i=0; i<N.size(); i++)
     {
         AVLNode* root=nullptr;
@@ -660,7 +660,7 @@ int main()
     //random sequence generation
     srand(time(0));
     vector<int> Sequence;
-    Sequence = {9,10,3,5,4,6,7,2,1,8};
+    Sequence = generateRandomSequence(500000);
     cout<< "1-AVL"<<endl<<"2-BST(losowe)"<<endl<<"3-TestBST"<<endl<<"4-TestAVL"<<endl;
     cin>>t;
     if(t==1)
