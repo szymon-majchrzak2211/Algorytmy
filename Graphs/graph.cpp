@@ -185,7 +185,7 @@ vector<int> DELmgrafu(vector<vector<int>> &matrixgraph, int V)
     
 }
 
-bool DFS(vector<vector<int>> &matrixadj, int V, int node, vector<int> &visited, vector<int> &result)
+bool DFSs(vector<vector<int>> &matrixadj, int V, int node, vector<int> &visited, vector<int> &result)
 {
     visited[node] = 1;
     for(int i = 1; i < V; i++)
@@ -195,7 +195,7 @@ bool DFS(vector<vector<int>> &matrixadj, int V, int node, vector<int> &visited, 
             if(visited[i]==1)
                 return false;
             if(visited[i]==0)
-                if(!DFS(matrixadj, V, i,visited, result))
+                if(!DFSs(matrixadj, V, i,visited, result))
                     return false;
         }
     }
@@ -208,7 +208,46 @@ vector<int> DFSmsasiedztwa(vector<vector<int>> &matrixadj, int V)
 {
     vector<int> visited(V, 0);
     vector<int> result;
-    if(!DFS(matrixadj, V, 1, visited, result))
+    if(!DFSs(matrixadj, V, 1, visited, result))
+    {
+        cout << "Graph is not a DAG" << endl;
+        return vector<int>();
+    }	
+    reverse(result.begin(), result.end());
+    return result;
+}
+
+bool DFSg(vector<vector<int>> &matrixgraph, int V, int node, vector<int> &visited, vector<int> &result)
+{
+    visited[node] = 1;
+    int i=matrixgraph[node][V];
+    while(i!=0 && i!=matrixgraph[node][i])
+    {
+        if(visited[i]==1)
+            return false;
+        if(visited[i]==0)
+            if(!DFSg(matrixgraph, V, i,visited, result))
+                return false;
+        i=matrixgraph[node][i];
+    }
+    if(i!=0)
+    {
+        if(visited[i]==1)
+            return false;
+        if(visited[i]==0)
+            if(!DFSg(matrixgraph, V, i,visited, result))
+                return false;
+    }
+    visited[node] = 2;
+    result.push_back(node);
+    return true;
+}
+
+vector<int> DFSmgrafu(vector<vector<int>> &matrixgraph, int V)
+{
+    vector<int> visited(V, 0);
+    vector<int> result;
+    if(!DFSg(matrixgraph, V, 1, visited, result))
     {
         cout << "Graph is not a DAG" << endl;
         return vector<int>();
@@ -219,9 +258,26 @@ vector<int> DFSmsasiedztwa(vector<vector<int>> &matrixadj, int V)
 
 int main()
 {
-    int n =11; // Number of vertices
-    vector<vector<int>> matrixadj(n, vector<int>(n, 0)); // Adjacency matrix initialized to 0
-    vector<vector<int>> matrixgraphs(n, vector<int>(n+3, 0));
+    ifstream fin("input.txt");
+    if (!fin) {
+        cerr << "Error opening file" << endl;
+        return 1;
+    }
+    int V, E;
+    fin >> V >> E;
+    V++; // Increase V by 1 to account for 1-based indexing
+    vector<vector<int>> matrixadj(V, vector<int>(V, 0)); // Adjacency matrix initialized to 0
+    vector<vector<int>> matrixgraphs(V, vector<int>(V+3, 0));
+    while(!fin.eof())
+    {
+        int i, j;
+        fin >> i >> j;
+        if(i<=0 || j<=0)
+            break;
+        if(i>=V || j>=V)
+            break;
+        addedgeadj(matrixadj, i, j);
+    }
 /*
     addedgeadj(matrixadj, 1, 2);
     addedgeadj(matrixadj, 2, 4);
@@ -231,7 +287,7 @@ int main()
     addedgeadj(matrixadj, 4, 3);
     addedgeadj(matrixadj, 5, 1);
     addedgeadj(matrixadj, 5, 4);
-   */
+
 
     addedgeadj(matrixadj, 1, 2);
     addedgeadj(matrixadj, 2, 3);
@@ -250,17 +306,16 @@ int main()
     addedgeadj(matrixadj, 2, 7);
     addedgeadj(matrixadj, 7, 9);
     addedgeadj(matrixadj, 7, 6);
-    //vector<int> topsort = DELmsasiedztwa(matrixadj, n);
-    //print(topsort);
-
-    
-    matrixgraph(matrixgraphs, n, matrixadj);
-    //display(matrixgraphs);
-    print(DELmsasiedztwa(matrixadj, n));
-    display(matrixgraphs);
-    print(DELmgrafu(matrixgraphs, n));
-    //print(DFSmsasiedztwa(matrixadj, n));
-    
+*/    
+    matrixgraph(matrixgraphs, V, matrixadj);
+    cout << "Macierz sasiedztwa DEL:" << endl;
+    print(DELmsasiedztwa(matrixadj, V));
+    cout<< "Macierz grafu DEL:" << endl;
+    print(DELmgrafu(matrixgraphs, V));
+    cout << "Macierz sasiedztwa DFS:" << endl;
+    print(DFSmsasiedztwa(matrixadj, V));
+    cout<< "Macierz grafu DFS:" << endl;
+    print(DFSmgrafu(matrixgraphs, V));
     return 0;
 
 }
