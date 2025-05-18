@@ -8,8 +8,10 @@
 #include <algorithm>
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 using namespace std;
 using namespace std::chrono;
+
 
 void print(vector<int> v)
 {
@@ -28,20 +30,21 @@ void addedgeadj(vector<vector<int>> &matrixadj, int i, int j)
 
 void display(vector<vector<int>> &matrixadj)
 {
-    cout<<" "<<"|";
+    int numw=4;
+    cout<<setw(numw)<<setfill(' ')<<" "<<"|";
     for (int i = 1; i < matrixadj[1].size(); i++)
-        cout<<" "<<i;
+        cout<<setw(numw)<<setfill(' ')<<i;
     cout<<endl;
-    for (int i = 1; i < matrixadj.size(); i++)
-        cout<<"--";
+    for (int i = 1; i < matrixadj[1].size()+1; i++)
+        cout<<setw(numw)<<setfill('-')<<"-";
     cout<<endl;
 
     for (int i = 1; i < matrixadj.size(); i++)
     {
-        cout<<i<<" | ";
+        cout<<setw(numw)<<setfill(' ')<<i<<"|";
         for (int j = 1; j < matrixadj[i].size(); j++)
         {
-            cout << matrixadj[i][j] << " ";
+            cout <<setw(numw)<<setfill(' ')<<matrixadj[i][j];
         }
         cout << endl;
     }
@@ -126,7 +129,7 @@ vector<int> DELmsasiedztwa(vector<vector<int>> &matrixadj, int V)
 
     if(result.size() != V-1)
     {
-        cout << "Graph is not a DAG" << endl;
+        cout << " Graf zawiera cykl. Sortowanie niemozliwe." << endl;
         return vector<int>();
     }
     return result;
@@ -178,7 +181,7 @@ vector<int> DELmgrafu(vector<vector<int>> &matrixgraph, int V)
 
     if(result.size() != V-1)
     {
-        cout << "Graph is not a DAG" << endl;
+        cout << " Graf zawiera cykl. Sortowanie niemozliwe." << endl;
         return vector<int>();
     }
     return result;
@@ -208,11 +211,15 @@ vector<int> DFSmsasiedztwa(vector<vector<int>> &matrixadj, int V)
 {
     vector<int> visited(V, 0);
     vector<int> result;
-    if(!DFSs(matrixadj, V, 1, visited, result))
+    for(int i=1;i<V;i++)
     {
-        cout << "Graph is not a DAG" << endl;
-        return vector<int>();
-    }	
+        if(visited[i]==0)
+            if(!DFSs(matrixadj, V, i, visited, result))
+            {
+                cout << " Graf zawiera cykl. Sortowanie niemozliwe." << endl;
+                return vector<int>();
+            }
+    }
     reverse(result.begin(), result.end());
     return result;
 }
@@ -247,18 +254,22 @@ vector<int> DFSmgrafu(vector<vector<int>> &matrixgraph, int V)
 {
     vector<int> visited(V, 0);
     vector<int> result;
-    if(!DFSg(matrixgraph, V, 1, visited, result))
+    for(int i=1;i<V;i++)
     {
-        cout << "Graph is not a DAG" << endl;
-        return vector<int>();
-    }	
+        if(visited[i]==0)
+            if(!DFSg(matrixgraph, V, i, visited, result))
+            {
+                cout << " Graf zawiera cykl. Sortowanie niemozliwe." << endl;
+                return vector<int>();
+            }
+    }
     reverse(result.begin(), result.end());
     return result;
 }
 
 int main()
 {
-    ifstream fin("input.txt");
+    ifstream fin("graf.txt");
     if (!fin) {
         cerr << "Error opening file" << endl;
         return 1;
@@ -278,8 +289,8 @@ int main()
             break;
         addedgeadj(matrixadj, i, j);
     }
-/*
-    addedgeadj(matrixadj, 1, 2);
+/*  Test graph 1
+    addedgeadj(matrixadj, 1, 2);  
     addedgeadj(matrixadj, 2, 4);
     addedgeadj(matrixadj, 2, 5);
     addedgeadj(matrixadj, 3, 1);
@@ -288,7 +299,7 @@ int main()
     addedgeadj(matrixadj, 5, 1);
     addedgeadj(matrixadj, 5, 4);
 
-
+    Test graph 2
     addedgeadj(matrixadj, 1, 2);
     addedgeadj(matrixadj, 2, 3);
     addedgeadj(matrixadj, 3, 4);
@@ -306,8 +317,10 @@ int main()
     addedgeadj(matrixadj, 2, 7);
     addedgeadj(matrixadj, 7, 9);
     addedgeadj(matrixadj, 7, 6);
-*/    
+*/   
+
     matrixgraph(matrixgraphs, V, matrixadj);
+    //display(matrixgraphs);
     cout << "Macierz sasiedztwa DEL:" << endl;
     print(DELmsasiedztwa(matrixadj, V));
     cout<< "Macierz grafu DEL:" << endl;
