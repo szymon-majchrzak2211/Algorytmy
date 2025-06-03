@@ -46,16 +46,8 @@ vector<Edge> generateDAG(int vertices, int edges) {
 
 int main() {
     int V, E;
-    cout << "Podaj liczbę wierzchołków: ";
-    cin >> V;
-    cout << "Podaj liczbę krawędzi: ";
-    cin >> E;
-
-    if (E > V * (V - 1) / 2) {
-        cout << "Zbyt wiele krawędzi dla DAG z " << V << " wierzchołkami.\n";
-        return 1;
-    }
-
+    V = 10;
+    E = 0.5 * V * (V -1)/2;
     vector<Edge> dag = generateDAG(V, E);
 
     ofstream outfile("graf.txt");

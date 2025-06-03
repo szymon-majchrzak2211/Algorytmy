@@ -9,9 +9,53 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <set>
+#include <random>
 using namespace std;
 using namespace std::chrono;
 
+struct Edge {
+    int from;
+    int to;
+};
+
+void generateDAG(int vertices, int edges) {
+    vector<Edge> result;
+    set<pair<int, int>> existing_edges;
+
+    // Tworzymy wierzchołki 1..V
+    vector<int> nodes(vertices);
+    for (int i = 0; i < vertices; ++i)
+        nodes[i] = i + 1;  // <-- indeksowanie od 1
+
+    random_shuffle(nodes.begin(), nodes.end());
+
+    mt19937 rng(time(0));
+
+    while ((int)result.size() < edges) {
+        int i = rng() % vertices;
+        int j = rng() % vertices;
+
+        if (i >= j) continue;
+
+        int from = nodes[i];
+        int to = nodes[j];
+
+        if (existing_edges.count({from, to}) == 0) {
+            result.push_back({from, to});
+            existing_edges.insert({from, to});
+        }
+    }
+    ofstream outfile("graf.txt");
+     // Pierwsza linia: liczba wierzchołków i krawędzi
+    outfile << vertices << " " << edges << "\n";
+
+    // Lista krawędzi (indeksy od 1)
+    for (const auto& edge : result) {
+        outfile << edge.from << " " << edge.to << "\n";
+    }
+    outfile.close();
+}
 
 void print(vector<int> v)
 {
@@ -267,8 +311,82 @@ vector<int> DFSmgrafu(vector<vector<int>> &matrixgraph, int V)
     return result;
 }
 
+
+void Test()
+{
+    ofstream foutT("AdjDel.csv");
+    ofstream foutM("AdjDSF.csv");
+    ofstream foutI("GraphDel.csv");
+    ofstream foutR("GraphDSF.csv");
+    vector<vector<int>> matrixadj(101, vector<int>(101, 0)); // Adjacency matrix initialized to 0
+    vector<vector<int>> matrixgraphs(101, vector<int>(104, 0));
+    int V[11]={100,250,400,550,700,850,1000,1150,1300,1450,1600};
+    for(int i=0; i<11; i++)
+    {
+        
+        cout<<V[i]<<" ";
+        V[i]++;
+        matrixadj.resize(V[i], vector<int>(V[i], 0)); // Resize the adjacency matrix
+        matrixgraphs.resize(V[i], vector<int>(V[i]+3, 0)); // Resize the graph matrix
+        int E=0.5*V[i]*(V[i]-1)/2;
+        cout<<E<<endl;
+        generateDAG(V[i]-1,E);
+        ifstream fin("graf.txt");
+        while(!fin.eof())
+        {
+            int i, j;
+            fin >> i >> j;
+            if(i<=0 || j<=0)
+                break;
+            if(i>=V[i] || j>=V[i])
+                break;
+            addedgeadj(matrixadj, i, j);
+        }
+        fin.close();
+        matrixgraph(matrixgraphs, V[i], matrixadj);
+        auto start = high_resolution_clock::now();
+        DELmsasiedztwa(matrixadj, V[i]);
+        auto stop = high_resolution_clock::now();
+        auto duration = duration_cast<microseconds>(stop - start);
+        foutT <<V[i]-1<<";"<<duration.count()<<endl;
+        auto start1 = high_resolution_clock::now();
+        DELmgrafu(matrixgraphs, V[i]);
+        auto stop1 = high_resolution_clock::now();
+        auto duration1 = duration_cast<microseconds>(stop1 - start1);
+        foutI <<V[i]-1<<";"<<duration1.count()<<endl;
+        auto start2 = high_resolution_clock::now();
+        DFSmsasiedztwa(matrixadj, V[i]);
+        auto stop2 = high_resolution_clock::now();
+        auto duration2 = duration_cast<microseconds>(stop2 - start2);
+        foutM <<V[i]-1<<";"<<duration2.count()<<endl;
+        auto start3 = high_resolution_clock::now();
+        DFSmgrafu(matrixgraphs, V[i]);
+        auto stop3 = high_resolution_clock::now();
+        auto duration3 = duration_cast<microseconds>(stop3 - start3);
+        foutR <<V[i]-1<<";"<<duration3.count()<<endl;
+        matrixadj.clear();
+        matrixgraphs.clear();
+    }
+    foutT.close();
+    foutM.close();
+    foutI.close();
+    foutR.close();
+    cout<<"Zapisano wyniki do plikow"<<endl;
+}
+
+
 int main()
 {
+    srand(time(0));
+    cout << "Wybierz operacje: 1-test, 2-reszta " << endl;
+    int t;
+    cin >> t;
+    if(t==1)
+    {
+        Test();
+    }
+    else
+    {
     ifstream fin("graf.txt");
     if (!fin) {
         cerr << "Error opening file" << endl;
@@ -329,6 +447,7 @@ int main()
     print(DFSmsasiedztwa(matrixadj, V));
     cout<< "Macierz grafu DFS:" << endl;
     print(DFSmgrafu(matrixgraphs, V));
+    }
     return 0;
 
 }

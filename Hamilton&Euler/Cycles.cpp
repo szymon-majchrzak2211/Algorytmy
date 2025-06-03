@@ -252,35 +252,47 @@ vector<int> Eulerlist(vector<vector<int>> &listadj, int V)
 
 int main()
 {
-    ifstream fin("graf.txt");
-    if (!fin) {
+    ifstream fin1("graf1.txt");
+    ifstream fin2("graf2.txt");
+    if (!fin1) {
         cerr << "Error opening file" << endl;
         return 1;
     }
-    int V, E;
-    fin >> V >> E;
-    V++; // Increase V by 1 to account for 1-based indexing
-    vector<vector<int>> matrixadj(V, vector<int>(V, 0)); // Adjacency matrix initialized to 0
-    vector<vector<int>> listadj(V); // Adjacency list initialized to empty vectors
-    while(!fin.eof())
+    int V1, E1,V2, E2;
+    fin1 >> V1 >> E1;
+    fin2 >> V2 >> E2;
+    V1++;
+    V2++; // Increase V by 1 to account for 1-based indexing
+    vector<vector<int>> matrixadj(V1, vector<int>(V1, 0)); // Adjacency matrix initialized to 0
+    vector<vector<int>> listadj(V2); // Adjacency list initialized to empty vectors
+    while(!fin1.eof())
     {
         int i, j;
-        fin >> i >> j;
+        fin1 >> i >> j;
         if(i<=0 || j<=0)
             break;
-        if(i>=V || j>=V)
+        if(i>=V1 || j>=V1)
             break;
         addedgeadj(matrixadj, i, j);
+    }
+    while(!fin2.eof())
+    {
+        int i, j;
+        fin2 >> i >> j;
+        if(i<=0 || j<=0)
+            break;
+        if(i>=V2 || j>=V2)
+            break;
         addedgelist(listadj, i, j);
     }
 
     cout<<"Hamilton matrixadj: " << endl;
-    print(Hamiltonadj(matrixadj, V));
+    print(Hamiltonadj(matrixadj, V1));
     cout<<"Hamilton listadj: " << endl;
-    print(Hamiltonlist(listadj, V));
+    print(Hamiltonlist(listadj, V2));
     cout<<"Euler matrixadj: " << endl;
-    print(Euleradj(matrixadj, V));
+    print(Euleradj(matrixadj, V1));
     cout<<"Euler listadj: " << endl;
-    print(Eulerlist(listadj, V));
+    print(Eulerlist(listadj, V2));
     return 0;
 }
